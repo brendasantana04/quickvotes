@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Votação</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --danger-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #34495e;
+            --text-color: #2c3e50;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 0;
+            box-shadow: var(--shadow);
+        }
+        
+        header h1 {
+            text-align: center;
+            font-weight: 700;
+        }
+        
+        nav {
+            background-color: var(--dark-color);
+            padding: 10px 0;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .nav-button {
+            padding: 10px 20px;
+            background-color: transparent;
+            color: var(--light-color);
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-button.active {
+            background-color: var(--secondary-color);
+        }
+        
+        .nav-button:hover {
+            background-color: rgba(52, 152, 219, 0.2);
+        }
+        
+        .content {
+            display: none;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            padding: 30px;
+            margin-top: 30px;
+        }
+        
+        .content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        h2 {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light-color);
+            color: var(--primary-color);
+        }
+        
+        .form-container {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        button.btn-success {
+            background-color: var(--success-color);
+        }
+        
+        button.btn-success:hover {
+            background-color: #219653;
+        }
+        
+        button.btn-danger {
+            background-color: var(--danger-color);
+        }
+        
+        button.btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: var(--light-color);
+            font-weight: 700;
+        }
+        
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .action-cell {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .no-data {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+            color: #7f8c8d;
+            border-top: 1px solid #ddd;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .content {
+                padding: 15px;
+            }
+            
+            .nav-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .nav-button {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Sistema de Votação</h1>
+        </div>
+    </header>
+    
+    <nav>
+        <div class="container nav-container">
+            <button class="nav-button active" data-target="candidatos">Candidatos</button>
+            <button class="nav-button" data-target="eleitores">Eleitores</button>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <!-- Seção de Candidatos -->
+        <section id="candidatos" class="content active">
+            <h2>Gerenciamento de Candidatos</h2>
+            
+            <div class="form-container">
+                <h3>Adicionar Novo Candidato</h3>
+                <form id="candidatoForm">
+                    <div class="form-group">
+                        <label for="nomeCandidato">Nome do Candidato</label>
+                        <input type="text" id="nomeCandidato" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="codigoCandidato">Código</label>
+                        <input type="number" id="codigoCandidato" required min="1">
+                    </div>
+                    <button type="submit" class="btn-success">Cadastrar Candidato</button>
+                </form>
+            </div>
+            
+            <div class="table-container">
+                <h3>Candidatos Cadastrados</h3>
+                <table id="tabelaCandidatos">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Código</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Os dados serão preenchidos via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        
+        <!-- Seção de Eleitores -->
+        <section id="eleitores" class="content">
+            <h2>Gerenciamento de Eleitores</h2>
+            
+            <div class="form-container">
+                <h3>Cadastrar Novo Eleitor</h3>
+                <form id="eleitorForm">
+                    <div class="form-group">
+                        <label for="nomeEleitor">Nome do Eleitor</label>
+                        <input type="text" id="nomeEleitor" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="candidatoEleitor">Candidato</label>
+                        <select id="candidatoEleitor">
+                            <option value="">Nenhum (ainda não votou)</option>
+                            <!-- Opções serão preenchidas via JavaScript -->
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-success">Cadastrar Eleitor</button>
+                </form>
+            </div>
+            
+            <div class="table-container">
+                <h3>Eleitores Cadastrados</h3>
+                <table id="tabelaEleitores">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Candidato Votado</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Os dados serão preenchidos via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>Sistema de Votação &copy; 2023 - Desenvolvido para demonstração</p>
+        </div>
+    </footer>
+    
+    <script>
+        // Simulação do banco de dados usando localStorage
+        const db = {
+            candidatos: JSON.parse(localStorage.getItem('candidatos')) || [],
+            eleitores: JSON.parse(localStorage.getItem('eleitores')) || []
+        };
+        
+        // Função para salvar dados no localStorage
+        function salvarDados() {
+            localStorage.setItem('candidatos', JSON.stringify(db.candidatos));
+            localStorage.setItem('eleitores', JSON.stringify(db.eleitores));
+        }
+        
+        // Função para gerar UUID
+        function gerarUUID() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                const r = Math.random() * 16 | 0;
+                const v = c === 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+        
+        // Navegação entre seções
+        document.querySelectorAll('.nav-button').forEach(button => {
+            button.addEventListener('click', () => {
+                // Remover classe ativa de todos os botões e conteúdos
+                document.querySelectorAll('.nav-button').forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.content').forEach(content => content.classList.remove('active'));
+                
+                // Adicionar classe ativa ao botão clicado e ao conteúdo correspondente
+                button.classList.add('active');
+                document.getElementById(button.dataset.target).classList.add('active');
+            });
+        });
+        
+        // Formulário de Candidato
+        document.getElementById('candidatoForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const nome = document.getElementById('nomeCandidato').value.trim();
+            const codigo = parseInt(document.getElementById('codigoCandidato').value);
+            
+            if (!nome || isNaN(codigo)) {
+                alert('Por favor, preencha todos os campos corretamente.');
+                return;
+            }
+            
+            // Verificar se o código já existe
+            if (db.candidatos.some(c => c.codigo === codigo)) {
+                alert('Já existe um candidato com este código.');
+                return;
+            }
+            
+            const novoCandidato = {
+                id: gerarUUID(),
+                nome,
+                codigo
+            };
+            
+            db.candidatos.push(novoCandidato);
+            salvarDados();
+            atualizarTabelaCandidatos();
+            atualizarSelectCandidatos();
+            
+            // Limpar formulário
+            this.reset();
+            alert('Candidato cadastrado com sucesso!');
+        });
+        
+        // Formulário de Eleitor
+        document.getElementById('eleitorForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const nome = document.getElementById('nomeEleitor').value.trim();
+            const candidatoId = document.getElementById('candidatoEleitor').value;
+            
+            if (!nome) {
+                alert('Por favor, informe o nome do eleitor.');
+                return;
+            }
+            
+            const novoEleitor = {
+                id: gerarUUID(),
+                nome,
+                candidato: candidatoId || null
+            };
+            
+            db.eleitores.push(novoEleitor);
+            salvarDados();
+            atualizarTabelaEleitores();
+            
+            // Limpar formulário
+            this.reset();
+            alert('Eleitor cadastrado com sucesso!');
+        });
+        
+        // Atualizar tabela de candidatos
+        function atualizarTabelaCandidatos() {
+            const tbody = document.querySelector('#tabelaCandidatos tbody');
+            tbody.innerHTML = '';
+            
+            if (db.candidatos.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="no-data">Nenhum candidato cadastrado</td></tr>';
+                return;
+            }
+            
+            db.candidatos.forEach(candidato => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${candidato.id.substring(0, 8)}</td>
+                    <td>${candidato.nome}</td>
+                    <td>${candidato.codigo}</td>
+                    <td class="action-cell">
+                        <button class="btn-danger" onclick="excluirCandidato('${candidato.id}')">Excluir</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+        
+        // Atualizar tabela de eleitores
+        function atualizarTabelaEleitores() {
+            const tbody = document.querySelector('#tabelaEleitores tbody');
+            tbody.innerHTML = '';
+            
+            if (db.eleitores.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="no-data">Nenhum eleitor cadastrado</td></tr>';
+                return;
+            }
+            
+            db.eleitores.forEach(eleitor => {
+                const candidatoVotado = eleitor.candidato ? 
+                    db.candidatos.find(c => c.id === eleitor.candidato)?.nome || 'Candidato não encontrado' : 
+                    'Não votou ainda';
+                
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${eleitor.id.substring(0, 8)}</td>
+                    <td>${eleitor.nome}</td>
+                    <td>${candidatoVotado}</td>
+                    <td class="action-cell">
+                        <button onclick="editarEleitor('${eleitor.id}')">Editar</button>
+                        <button class="btn-danger" onclick="excluirEleitor('${eleitor.id}')">Excluir</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+        
+        // Atualizar select de candidatos
+        function atualizarSelectCandidatos() {
+            const select = document.getElementById('candidatoEleitor');
+            // Manter a opção "Nenhum"
+            select.innerHTML = '<option value="">Nenhum (ainda não votou)</option>';
+            
+            db.candidatos.forEach(candidato => {
+                const option = document.createElement('option');
+                option.value = candidato.id;
+                option.textContent = `${candidato.codigo} - ${candidato.nome}`;
+                select.appendChild(option);
+            });
+        }
+        
+        // Funções de exclusão
+        function excluirCandidato(id) {
+            if (confirm('Tem certeza que deseja excluir este candidato?')) {
+                // Verificar se há eleitores associados
+                const eleitoresAssociados = db.eleitores.filter(e => e.candidato === id);
+                
+                if (eleitoresAssociados.length > 0) {
+                    if (!confirm('Este candidato possui eleitores associados. Excluir mesmo assim?')) {
+                        return;
+                    }
+                    
+                    // Remover associação
+                    eleitoresAssociados.forEach(e => {
+                        e.candidato = null;
+                    });
+                }
+                
+                db.candidatos = db.candidatos.filter(c => c.id !== id);
+                salvarDados();
+                atualizarTabelaCandidatos();
+                atualizarTabelaEleitores();
+                atualizarSelectCandidatos();
+            }
+        }
+        
+        function excluirEleitor(id) {
+            if (confirm('Tem certeza que deseja excluir este eleitor?')) {
+                db.eleitores = db.eleitores.filter(e => e.id !== id);
+                salvarDados();
+                atualizarTabelaEleitores();
+            }
+        }
+        
+        // Função para editar eleitor
+        function editarEleitor(id) {
+            const eleitor = db.eleitores.find(e => e.id === id);
+            if (!eleitor) return;
+            
+            // Preencher formulário com dados do eleitor
+            document.getElementById('nomeEleitor').value = eleitor.nome;
+            document.getElementById('candidatoEleitor').value = eleitor.candidato || '';
+            
+            // Scroll para o formulário
+            document.getElementById('eleitorForm').scrollIntoView({ behavior: 'smooth' });
+            
+            // Remover eleitor da lista (para evitar duplicatas)
+            db.eleitores = db.eleitores.filter(e => e.id !== id);
+            salvarDados();
+            atualizarTabelaEleitores();
+        }
+        
+        // Inicialização
+        window.onload = function() {
+            atualizarTabelaCandidatos();
+            atualizarTabelaEleitores();
+            atualizarSelectCandidatos();
+            
+            // Adicionar alguns dados iniciais para demonstração
+            if (db.candidatos.length === 0) {
+                db.candidatos = [
+                    { id: gerarUUID(), nome: "João Silva", codigo: 10 },
+                    { id: gerarUUID(), nome: "Maria Oliveira", codigo: 20 },
+                    { id: gerarUUID(), nome: "Carlos Pereira", codigo: 30 }
+                ];
+            }
+            
+            if (db.eleitores.length === 0) {
+                db.eleitores = [
+                    { id: gerarUUID(), nome: "Ana Souza", candidato: db.candidatos[0].id },
+                    { id: gerarUUID(), nome: "Pedro Costa", candidato: null },
+                    { id: gerarUUID(), nome: "Mariana Santos", candidato: db.candidatos[1].id }
+                ];
+            }
+            
+            salvarDados();
+            atualizarTabelaCandidatos();
+            atualizarTabelaEleitores();
+            atualizarSelectCandidatos();
+        };
+    </script>
+</body>
+</html>
