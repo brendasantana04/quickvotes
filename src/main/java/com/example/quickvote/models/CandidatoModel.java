@@ -1,0 +1,25 @@
+package com.example.quickvote.models;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
+
+import java.io.Serial;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+
+@Entity
+@Table(name = "TB_CANDIDATO")
+public class CandidatoModel implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
+
+    @Column(nullable = false)
+    private String nome;
+}
