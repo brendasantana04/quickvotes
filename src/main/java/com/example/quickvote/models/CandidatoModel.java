@@ -28,6 +28,9 @@ public class CandidatoModel implements Serializable {
     private String nome;
     private int codigo;
 
+    public CandidatoModel(int id) {
+    }
+
     public void setId(int id) {
         this.id = id;
     }

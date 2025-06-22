@@ -23,7 +23,7 @@ public class VotoModel implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+    private int id;
 
     @OneToOne
     @JoinColumn(name = "id_candidato", referencedColumnName = "id")
@@ -33,4 +33,27 @@ public class VotoModel implements Serializable {
     @JoinColumn(name = "id_eleitor", referencedColumnName = "id")
     private EleitorModel eleitor;
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public CandidatoModel getCandidato() {
+        return candidato;
+    }
+
+    public void setCandidato(CandidatoModel candidato) {
+        this.candidato = candidato;
+    }
+
+    public EleitorModel getEleitor() {
+        return eleitor;
+    }
+
+    public void setEleitor(EleitorModel eleitor) {
+        this.eleitor = eleitor;
+    }
 }

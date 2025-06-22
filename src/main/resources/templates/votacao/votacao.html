@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Votação</title>
+    <style>
+        body { font-family: sans-serif; padding: 2rem; }
+        .container { width: 400px; border: 1px solid #ccc; padding: 2rem; border-radius: 8px; }
+        .candidato { margin-bottom: 1rem; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Seu nome (ou ID):</h2>
+    <form method="post" th:action="@{/votar}">
+        <input type="text" name="eleitorId" placeholder="Digite seu ID" required />
+        <button type="button" disabled>Buscar Eleitor (read)</button>
+
+        <h3>Candidatos:</h3>
+        <div th:each="candidato : ${candidatos}" class="candidato">
+            <label>
+                <input type="radio" name="candidatoId" th:value="${candidato.id}" required />
+                <span th:text="${candidato.nome}">Nome do Candidato</span>
+            </label>
+        </div>
+
+        <button type="submit">Votar</button>
+    </form>
+</div>
+</body>
+</html>

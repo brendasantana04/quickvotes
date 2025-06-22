@@ -17,17 +17,38 @@ import java.util.UUID;
 @Entity
 @Table(name = "TB_ELEITOR")
 public class EleitorModel implements Serializable {
+
     @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+    private int id;
 
-    @Column(nullable = false)
+    @Column//(nullable = false)
     private String nome;
 
-    @OneToOne
-    @JoinColumn(name = "id_candidato", referencedColumnName = "id")
-    private CandidatoModel candidato;
+    public EleitorModel(int id) {
+    }
+
+    // @OneToOne
+    // @JoinColumn(name = "id_candidato", referencedColumnName = "id")
+    // private CandidatoModel candidato;
+
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 }
