@@ -33,7 +33,7 @@ public class CandidatoController {
     }
 
     //editar um candidato
-    @PutMapping("/editar-candidato/{id}")
+    @PostMapping("/editar-candidato/{id}")
     public String editarCandidato(@PathVariable("id") int id, @RequestBody CandidatoModel candidato) {
         candidato.setId(id);
         candidatoRepository.save(candidato);
