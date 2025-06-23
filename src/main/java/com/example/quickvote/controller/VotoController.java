@@ -52,12 +52,12 @@ public class VotoController {
     }
 
     @PostMapping("/votar")
-    public String processarVoto(@RequestParam int eleitorId, @RequestParam int candidatoId) {
+    public String processarVoto(@RequestParam int eleitorId, @RequestParam int candidatoId, Model model) {
         EleitorModel eleitor = eleitorRepository.findById(eleitorId).orElse(null);
         CandidatoModel candidato = candidatoRepository.findById(candidatoId).orElse(null);
 
         if (eleitor == null || candidato == null) {
-            return "resultado/resultado";
+            return "redirect:/votar?erro";
         }
 
         VotoModel voto = new VotoModel();
@@ -65,8 +65,14 @@ public class VotoController {
         voto.setCandidato(candidato);
         votoRepository.save(voto);
 
+        // chama a stored procedure
+        int totalVotos = votoRepository.contarVotosPorCandidato(candidatoId);
+        System.out.println("Total de votos para o candidato " + candidato.getNome() + ": " + totalVotos);
+
+        // você pode adicionar esse total no model se quiser exibir em uma tela
+        model.addAttribute("mensagem", "Voto registrado! Total atual para " + candidato.getNome() + ": " + totalVotos);
+
         return "redirect:/resultado";
     }
-
 
 }
