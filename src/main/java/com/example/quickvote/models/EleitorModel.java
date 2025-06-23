@@ -28,8 +28,8 @@ public class EleitorModel implements Serializable {
     @Column//(nullable = false)
     private String nome;
 
-    public EleitorModel(int id) {
-    }
+   // public EleitorModel(int id) {
+   // }
 
     // @OneToOne
     // @JoinColumn(name = "id_candidato", referencedColumnName = "id")

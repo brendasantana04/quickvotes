@@ -20,7 +20,7 @@ public class EleitorController {
 
     //criação de um novo eleitor
     @PostMapping("adicionar-eleitor")
-    public String adicionarEleitor(@ModelAttribute EleitorModel eleitor) {
+    public String adicionarEleitor(@RequestBody EleitorModel eleitor) {
         eleitorRepository.save(eleitor);
         return "redirect:/cadastro-eleitor";
     }
