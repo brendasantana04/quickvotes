@@ -20,7 +20,7 @@ public class EleitorController {
 
     //criação de um novo eleitor
     @PostMapping("adicionar-eleitor")
-    public String adicionarEleitor(@RequestBody EleitorModel eleitor) {
+    public String adicionarEleitor(@ModelAttribute EleitorModel eleitor) {
         eleitorRepository.save(eleitor);
         return "redirect:/cadastro-eleitor";
     }
@@ -34,7 +34,7 @@ public class EleitorController {
 
     //editar um eleitor
     @PostMapping("/editar-eleitor/{id}")
-    public String editarEleitor(@PathVariable("id") int id, @RequestBody EleitorModel eleitor) {
+    public String editarEleitor(@PathVariable("id") int id, @ModelAttribute EleitorModel eleitor) {
         eleitor.setId(id);
         eleitorRepository.save(eleitor);
         return "redirect:/cadastro-eleitor";
